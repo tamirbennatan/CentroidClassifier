@@ -88,3 +88,40 @@ def chebyshev_dist_factory(X):
 
 
 
+def skew_distance_factory(X):
+	"""
+
+	"""
+	pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
