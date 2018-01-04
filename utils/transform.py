@@ -34,3 +34,40 @@ def class_subset(X, y, c):
 	subset = X[y == c,]	
 	return(subset)
 
+def project_matrix(X, funcs):
+	"""
+	Given a design matrix `X`, and a list of functions `funcs`, 
+	apply these functions in sequence to the columns of `X` to yield a list of np.arrays, 
+	then concatenate the result. 
+
+	This is used primarily to project a series of training vectors to vectors which are the
+	distances from each vector to each response class centroid.
+
+	Parameters
+	----------
+	X : array-like, shape (n_samples, n_features)
+	    Design matrix, where n_samples is the number of samples and
+	    n_features is the number of features.
+
+	funcs : list of functions
+		Functions to apply to the columns of `X`. 
+		Functions are expected to have the behaviour of `f(l) -> l'), where
+		l is a list or numpy array
+
+
+	Returns
+	----------
+	X_proj : array-like, shape (n_samples, k)
+		Each vector corresponds to a vector of dimension `k`, 
+		where `k` is the output dimension of each of the functions in `funcs`. 
+	"""
+	# generate functions to compute distance from a vector to each cluster centroid
+	# then apply these functions to X to get an array of length `n_samples`, 
+	# which correspond to the distances from each point to each cluster centroid.
+	dists = [np.apply_along_axis(f, 1, X) for f in funcs]
+	# Concatenate the distances from each point to each cluster centroid to get a 
+	# projected dataset, X_proj
+	X_proj = np.stack(dists, axis = 1)
+
+	return(X_proj)
+
