@@ -5,6 +5,7 @@
 
 import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
 
 
 def class_subset(X, y, c):
@@ -70,4 +71,38 @@ def project_matrix(X, funcs):
 	X_proj = np.stack(dists, axis = 1)
 
 	return(X_proj)
+
+
+def project_pca_2D(X):
+	"""
+	Project a matrix of arbitrary dimenstion onto it's two largest principle components. 
+	Used primarily for 2D plotting. 
+
+	Parameters
+	----------
+	X : array-like, shape (n_samples, n_features)
+	    Matrix - numeric data type. 
+
+	Returns
+	----------
+	pca : sklearn.decomposition.PCA object
+		Trained PCA decomposition, used to project data onto 2 largest PCA components
+	"""
+
+	pca = PCA(n_components=2).fit(X)
+	return(pca)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

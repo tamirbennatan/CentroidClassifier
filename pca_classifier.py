@@ -5,6 +5,7 @@
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_X_y, check_array, check_consistent_length
@@ -15,9 +16,8 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 from utils.distance_factories import euclidean_dist_factory, manhattan_dist_factory,\
     mahalanobis_dist_factory, chebyshev_dist_factory
-from utils.transform import class_subset, project_matrix
-
-from collections import defaultdict
+from utils.transform import class_subset, project_matrix, project_pca_2D
+from utils.plotting import make_meshgrid, plot_contours
 
 import pdb
 
@@ -37,46 +37,13 @@ class PCAClassifier(BaseEstimator, ClassifierMixin):
         self._classifier = classifier
 
     def set_params(self, **params):
-    	try:
-    		self.set_params(**params)
-    		return(self)
-    	except:
-    		self._classifier.set_params(**params)
-    		return(self)
+        try:
+            self.set_params(**params)
+            return(self)
+        except:
+            self._classifier.set_params(**params)
+            return(self)
 
-    # def set_params(self, **params):
-    #     """Set the parameters of this estimator.
-    #     The method works on simple estimators as well as on nested objects
-    #     (such as pipelines). The latter have parameters of the form
-    #     ``<component>__<parameter>`` so that it's possible to update each
-    #     component of a nested object.
-    #     Returns
-    #     -------
-    #     self
-    #     """
-    #     if not params:
-    #         # Simple optimization to gain speed (inspect is slow)
-    #         return self
-    #     valid_params = self.get_params(deep=True)
-
-    #     nested_params = defaultdict(dict)  # grouped by prefix
-    #     for key, value in params.items():
-    #         key, delim, sub_key = key.partition('__')
-    #         if key not in valid_params:
-    #         	pdb.set_trace()
-    #             setattr(self._classifier, key, value)
-
-    #         if delim:
-    #             nested_params[key][sub_key] = value
-    #         else:
-    #             setattr(self, key, value)
-    #             valid_params[key] = value
-
-    #     for key, sub_params in nested_params.items():
-    #         valid_params[key].set_params(**sub_params)
-
-    #     return self
-        
 
     def fit(self, X, y):
 
@@ -137,5 +104,46 @@ class PCAClassifier(BaseEstimator, ClassifierMixin):
 
         return(y_hat)
 
+    def plot_boundary(self, X, y,  title = None, alpha = None):
+        """
+        Plot the decision boundary of a fitted model as a countour plot.
+        Currently only supported for binary classification problems 
 
+        If the data has more than 2 features, default behaviour is to project training vectors
+        onto their 2 largest principle components, and plot a 2D countour plot. 
+        """
+
+        # verify that estimator was fitted successfully
+        check_is_fitted(self, "_centroid_dist_factories")
+
+
+        # Verify that response vector only has two classes
+        if (len(self._classes) != 2):
+            raise NotImplementedError("Decision boundary plotting only supported for binary \
+                classification tasks. Fitted data has %d unique clases." % len(self._classes))
+        
+        # project the matrix `X` to vectors of distances from cluster centroids
+        X_proj = project_matrix(X, self._centroid_dist_factories)
+
+        # isolate the distances from first and second cluster centoids
+        X1, X2 = X_proj[:,0], X_proj[:,1]
+
+
+        xx, yy = make_meshgrid(X_proj[:,0], X_proj[:,1])
+
+        # create a mesh to plot decision boundary onto
+        xx, yy = make_meshgrid(X1, X2)
+
+        f, ax = plt.subplots()
+
+        plot_contours(ax, self._classifier, xx, yy,
+                          cmap=plt.cm.coolwarm, alpha=0.8)
+        ax.scatter(X1, X2, c=y, cmap=plt.cm.coolwarm, s=20, edgecolors='k', alpha = alpha)
+        ax.set_xlim(xx.min(), xx.max())
+        ax.set_ylim(yy.min(), yy.max())
+        ax.set_xlabel('%s distance from first cluster centroid' %(self._distance.title()))
+        ax.set_ylabel('%s distance from second cluster centroid' % (self._distance.title()))
+        ax.set_xticks(())
+        ax.set_yticks(())
+        ax.set_title("Decision boundary using %s distance." % (self._distance))
 
