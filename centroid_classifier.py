@@ -128,7 +128,7 @@ class CentroidClassifier(BaseEstimator, ClassifierMixin):
 
         return(y_hat)
 
-    def plot_boundary(self, X, y,  title = None, alpha = None):
+    def plot_boundary(self, X, y,  title = None, alpha = .8):
         """
         Plot the decision boundary of a fitted model as a countour plot.
         Currently only supported for binary classification problems 
@@ -151,9 +151,6 @@ class CentroidClassifier(BaseEstimator, ClassifierMixin):
 
         # isolate the distances from first and second cluster centoids
         X1, X2 = X_proj[:,0], X_proj[:,1]
-
-
-        xx, yy = make_meshgrid(X_proj[:,0], X_proj[:,1])
 
         # create a mesh to plot decision boundary onto
         xx, yy = make_meshgrid(X1, X2)
