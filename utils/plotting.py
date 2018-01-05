@@ -1,5 +1,6 @@
 """
-
+Utilities for plotting.
+Used in the static method `CentroidClassifier.plot_boundary`.
 """
 
 import numpy as np

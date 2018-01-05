@@ -1,5 +1,10 @@
 """
+To train the centroid classifier in `centroid_classifier` module, need to learn
+functions that compute the distance from an arbitrary vector to each cluster centroid.
 
+Here are function factories, which - given a subset of data all form one class - 
+return a function that computes the distance from an arbitrary vector to 
+the centroid of that class.
 """
 
 import numpy as np
@@ -33,7 +38,19 @@ def class_average(X):
 
 def euclidean_dist_factory(X):
 	"""
+	Create a function which computes the Euclidean distance to the
+	centroid of `X`. 
 
+	Parameters
+	----------
+	X : array-like, shape (n_samples, n_features)
+	    Training vectors - assumed to all be part of one class.
+
+	Returns
+	----------
+	euclidean_distance : function
+		takes in a vector of shape (n_features,), and returns the 
+		Euclidean distance to the centroid of `X`.
 	"""
 	avg = class_average(X)
 	def euclidean_distance(x):
@@ -44,7 +61,19 @@ def euclidean_dist_factory(X):
 
 def manhattan_dist_factory(X):
 	"""
+	Create a function which computes the Manhattan distance to the
+	centroid of `X`. 
 
+	Parameters
+	----------
+	X : array-like, shape (n_samples, n_features)
+	    Training vectors - assumed to all be part of one class.
+
+	Returns
+	----------
+	cityblock_distance : function
+		takes in a vector of shape (n_features,), and returns the 
+		Manhattan distance to the centroid of `X`.
 	"""
 	avg = class_average(X)
 	def cityblock_distance(x):
@@ -55,7 +84,19 @@ def manhattan_dist_factory(X):
 
 def mahalanobis_dist_factory(X):
 	"""
+	Create a function which computes the Mahalanobis distance to the
+	centroid of `X`. 
 
+	Parameters
+	----------
+	X : array-like, shape (n_samples, n_features)
+	    Training vectors - assumed to all be part of one class.
+
+	Returns
+	----------
+	mahalanobis_distance : function
+		takes in a vector of shape (n_features,), and returns the 
+		Mahalanobis distance to the centroid of `X`.
 	"""
 	# compute the average vector location
 	avg = class_average(X)
@@ -73,7 +114,19 @@ def mahalanobis_dist_factory(X):
 
 def chebyshev_dist_factory(X):
 	"""
+	Create a function which computes the Chebyshev distance to the
+	centroid of `X`. 
 
+	Parameters
+	----------
+	X : array-like, shape (n_samples, n_features)
+	    Training vectors - assumed to all be part of one class.
+
+	Returns
+	----------
+	chebyshev_distance : function
+		takes in a vector of shape (n_features,), and returns the 
+		Chebyshev distance to the centroid of `X`.
 	"""
 	# compute the average vector location
 	avg = class_average(X)

@@ -1,6 +1,5 @@
 """
-
-
+Data tranformation utilities.
 """
 
 import numpy as np

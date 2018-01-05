@@ -1,8 +1,25 @@
 # -*- coding: utf-8 -*-
 
 """
+The :mod:`centroid_classifier` implements a a generalization of the clasical
+nearest centroid classification algorithm, available on Sklearn here:
+http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestCentroid.html
 
+This implementation makes two main generalizations of the implementation above. First, 
+several additional distance metrics are implemented beyond those in Sklearn's module,
+including a novel distance metric which takes into account the skew in the training
+data along its principle components - proposed by Dr. Mark DeBonis in his paper 
+"Using skew for classification".
+
+The second generalization is that instead of predicting a class of a vector based on the
+centroid it is nearest, the data is projected to a new vector space - where the components
+of each projected vector are the distances to each of the centroids - and then arbitrary 
+classification methods can be applied to this projected dataest. Using an LDA classifier
+yields the classical classification method.
 """
+
+# Author: Tamir Bennatan <timibennatan@gmail.com>
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,10 +47,17 @@ distance_func_factories = {
     }
 
 
-class PCAClassifier(BaseEstimator, ClassifierMixin):
+class CentroidClassifier(BaseEstimator, ClassifierMixin):
 
     def __init__(self, distance = "mahalanobis", classifier = LinearDiscriminantAnalysis()):
+    	if distance is None:
+    		distance = "mahalanobis"
+    	# see if passed distance metric is a valid one
+    	if distance not in distance_func_factories:
+    		raise ValueError("Invalid distance measure `%s`. " % distance)
         self._distance = distance
+        if classifier is None:
+        	classifier = LinearDiscriminantAnalysis()
         self._classifier = classifier
 
     def set_params(self, **params):
@@ -120,7 +144,7 @@ class PCAClassifier(BaseEstimator, ClassifierMixin):
         # Verify that response vector only has two classes
         if (len(self._classes) != 2):
             raise NotImplementedError("Decision boundary plotting only supported for binary \
-                classification tasks. Fitted data has %d unique clases." % len(self._classes))
+                classification tasks. Fitted data has %d unique classes." % len(self._classes))
         
         # project the matrix `X` to vectors of distances from cluster centroids
         X_proj = project_matrix(X, self._centroid_dist_factories)
