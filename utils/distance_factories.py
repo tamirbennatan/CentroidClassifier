@@ -30,11 +30,6 @@ def class_average(X):
 	"""
 	# compute average row vector
 	mean_vector = np.mean(X, axis = 0)
-	# convert to float dtype
-	mean_vector = mean_vector.astype(dtype = np.float64)
-	return(mean_vector)
-
-
 
 def euclidean_dist_factory(X):
 	"""
