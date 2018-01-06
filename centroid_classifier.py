@@ -22,6 +22,7 @@ yields the classical classification method.
 
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 from sklearn.base import BaseEstimator, ClassifierMixin
@@ -155,11 +156,14 @@ class CentroidClassifier(BaseEstimator, ClassifierMixin):
         # create a mesh to plot decision boundary onto
         xx, yy = make_meshgrid(X1, X2)
 
+        # convert the labels to  integer factors
+        y = pd.Categorical(y).codes
+
         f, ax = plt.subplots()
 
         plot_contours(ax, self._classifier, xx, yy,
                           cmap=plt.cm.coolwarm, alpha=0.8)
-        ax.scatter(X1, X2, c=y, cmap=plt.cm.coolwarm, s=20, edgecolors='k', alpha = alpha)
+        ax.scatter(X1, X2, cmap=plt.cm.coolwarm, s=20, edgecolors='k', alpha = alpha)
         ax.set_xlim(xx.min(), xx.max())
         ax.set_ylim(yy.min(), yy.max())
         ax.set_xlabel('%s distance from first cluster centroid' %(self._distance.title()))
