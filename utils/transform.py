@@ -17,7 +17,7 @@ def class_subset(X, y, c):
 	    Design matrix, where n_samples is the number of samples and
 	    n_features is the number of features.
 
-	y : array-like. shape (n_samples,)
+	y : array-like. shape (n_samples,) or (1, n_samples)
 		Response vector. Value at index `i` is label to training vector 
 		in row `i` of X
 
@@ -31,7 +31,7 @@ def class_subset(X, y, c):
 		subset = `class_subset(X, y, c)` returns the rows in `X` 
 		corresponding the indecies in `y` where `y[i] == class`.
 	"""
-	subset = X[y == c,]	
+	subset = X[np.where(y == c),][0]	
 	return(subset)
 
 def project_matrix(X, funcs):
