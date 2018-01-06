@@ -34,7 +34,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 from utils.distance_factories import euclidean_dist_factory, manhattan_dist_factory,\
     mahalanobis_dist_factory, chebyshev_dist_factory
-from utils.transform import class_subset, project_matrix, project_pca_2D
+from utils.transform import class_subset, project_matrix
 from utils.plotting import make_meshgrid, plot_contours
 
 import pdb
@@ -50,7 +50,7 @@ distance_func_factories = {
 
 class CentroidClassifier(BaseEstimator, ClassifierMixin):
 
-    def __init__(self, distance = "mahalanobis", classifier = LinearDiscriminantAnalysis()):
+    def __init__(self, distance = "mahalanobis", classifier = None):
     	if distance is None:
     		distance = "mahalanobis"
     	# see if passed distance metric is a valid one
@@ -103,6 +103,7 @@ class CentroidClassifier(BaseEstimator, ClassifierMixin):
         yields `k` points - corresponding to the distances to the `k` cluster centroids. 
         """
         X_proj = project_matrix(X, self._centroid_dist_factories)
+
 
         """
         Fit the inputed classifier to the projected dataset. 

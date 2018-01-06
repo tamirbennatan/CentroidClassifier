@@ -72,10 +72,9 @@ def project_matrix(X, funcs):
 	return(X_proj)
 
 
-def project_pca_2D(X):
+def pca_basis(X, n_components = None):
 	"""
-	Project a matrix of arbitrary dimenstion onto it's two largest principle components. 
-	Used primarily for 2D plotting. 
+	Retrieve the PCA basis of a matrix, X.
 
 	Parameters
 	----------
@@ -84,12 +83,14 @@ def project_pca_2D(X):
 
 	Returns
 	----------
-	pca : sklearn.decomposition.PCA object
-		Trained PCA decomposition, used to project data onto 2 largest PCA components
+	pca_basis : Array-Like, shape (n_features, n_features)
+		Trained PCA decomposition.
 	"""
-
-	pca = PCA(n_components=2).fit(X)
-	return(pca)
+	# unless stated otherwise, retrieve the basis of the smame dimension of X. 
+	if n_components is None:
+		n_components = X.shape[1]
+	pca_basis = PCA(n_components=2).fit_transform(X)
+	return(pca_basis)
 
 
 
