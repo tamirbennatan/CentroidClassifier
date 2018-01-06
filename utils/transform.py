@@ -31,7 +31,7 @@ def class_subset(X, y, c):
 		subset = `class_subset(X, y, c)` returns the rows in `X` 
 		corresponding the indecies in `y` where `y[i] == class`.
 	"""
-	subset = X[np.where(y == c),][0]	
+	subset = X[y == c,]	
 	return(subset)
 
 def project_matrix(X, funcs):
