@@ -62,13 +62,12 @@ class CentroidClassifier(BaseEstimator, ClassifierMixin):
         self._classifier = classifier
 
     def set_params(self, **params):
-        try:
-            self.set_params(**params)
-            return(self)
-        except:
-            self._classifier.set_params(**params)
-            return(self)
-
+        for key, value in params.items():
+            try:
+                setattr(self, key, value)
+            except:
+                self._classifier.set_params({key:value})
+        return(self)
 
     def fit(self, X, y):
 
