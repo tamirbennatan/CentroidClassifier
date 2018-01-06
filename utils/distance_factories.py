@@ -30,6 +30,7 @@ def class_average(X):
 	"""
 	# compute average row vector
 	mean_vector = np.mean(X, axis = 0)
+	return(mean_vector)
 
 def euclidean_dist_factory(X):
 	"""

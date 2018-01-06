@@ -163,7 +163,7 @@ class CentroidClassifier(BaseEstimator, ClassifierMixin):
 
         plot_contours(ax, self._classifier, xx, yy,
                           cmap=plt.cm.coolwarm, alpha=0.8)
-        ax.scatter(X1, X2, cmap=plt.cm.coolwarm, s=20, edgecolors='k', alpha = alpha)
+        ax.scatter(X1, X2, c=y, cmap=plt.cm.coolwarm, s=20, edgecolors='k', alpha = alpha)
         ax.set_xlim(xx.min(), xx.max())
         ax.set_ylim(yy.min(), yy.max())
         ax.set_xlabel('%s distance from first cluster centroid' %(self._distance.title()))
