@@ -5,6 +5,9 @@ Used in the static method `CentroidClassifier.plot_boundary`.
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import pdb
 
 def make_meshgrid(x, y, h=.02):
     """
@@ -41,7 +44,11 @@ def plot_contours(ax, clf, xx, yy, **params):
     yy: meshgrid ndarray
     params: dictionary of params to pass to contourf, optional
     """
+
+    # pdb.set_trace()
+
     Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = pd.Categorical(Z).codes
     Z = Z.reshape(xx.shape)
     out = ax.contourf(xx, yy, Z, **params)
     return out
