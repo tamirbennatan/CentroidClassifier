@@ -7,8 +7,15 @@ return a function that computes the distance from an arbitrary vector to
 the centroid of that class.
 """
 
+from __future__ import division
+# True Division.
+
 import numpy as np
 from scipy.spatial.distance import euclidean, cityblock, mahalanobis, chebyshev
+from sklearn.decomposition import PCA
+
+from utils.Skew_Funcs import mode_Finder, sigma_Finder, skew_Dist
+# Functions needed to compute the skew distance.
 
 
 
@@ -135,13 +142,71 @@ def chebyshev_dist_factory(X):
 	return(chebyshev_distance)
 
 
-
-
 def skew_distance_factory(X):
-	"""
-
-	"""
-	pass
+    """
+    @author: Rocco Pascale 
+    @email: rpascale.student@manhattan.edu
+    This is all based on the work done by Dr. DeBonis
+    in his paper "Using Skew for Classification".
+    
+    Create a function which computes the Skew distance to the
+    centroid of `X`. 
+    
+    Parameters
+    ----------
+    X : array-like, shape (n_samples, n_features)
+    Training vectors - assumed to all be part of one class.
+    
+    Returns
+    ----------
+    skew_distance : function
+    takes in a vector of shape (n_features,), and returns the 
+    Skew distance to the centroid of `X`.
+    """   
+    
+##### 1: Center Around Mean ###################################################
+    
+    C_i = X - class_average(X)
+    # Centering the class around its mean.
+    # Using the class_average function to do so.
+##### 1: Center Around Mean ###################################################
+    
+##### 2: PCA Basis Change #####################################################
+    
+    pca_Basis = PCA().fit(C_i).components_
+    P_i = np.matmul(C_i, pca_Basis)
+    # Performing the PCA Basis change.
+    # Utilizing the PCA object from sklearn.
+##### 2: PCA Basis Change #####################################################
+    
+##### 3: Center Around Mode ###################################################
+    
+    feature_Modes = np.apply_along_axis(mode_Finder, 0, P_i)
+    Q_i = P_i - feature_Modes
+    # Finding the mode for each feature of Q_i and centering.
+##### 3: Center Around Mode ###################################################
+    
+##### 4: Skew Distribution Fit and 1-sd Sigmas ################################
+    
+    feature_Sigmas = np.apply_along_axis(sigma_Finder, 0, Q_i)
+    # Fitting each feature of Q_i according to the its skew.
+    # Then using that fit to find the one-sided Std. Deviations.
+    # First array is the Positive Std. Dev.
+    # Second Array is the Negative Std. Dev.
+##### 4: Skew Distribution Fit and 1-sd Sigmas ################################
+    
+##### 5: Skew Distance ########################################################
+        
+    def skew_distance(x):
+        x_BC = pca_Basis.dot(x)
+        # Changing x to the proper basis.
+        
+        d = skew_Dist(x_BC, mode = feature_Modes, sigmas = feature_Sigmas)
+        # Skew distance function on a particular observation.
+        return(d)
+##### 5: Skew Distance ########################################################
+    
+    return(skew_distance)
 
 
 
