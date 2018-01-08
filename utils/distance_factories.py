@@ -14,7 +14,7 @@ import numpy as np
 from scipy.spatial.distance import euclidean, cityblock, mahalanobis, chebyshev
 from sklearn.decomposition import PCA
 
-from utils.Skew_Funcs import mode_Finder, sigma_Finder, skew_Dist
+from utils.skew_funcs import mode_Finder, sigma_Finder, skew_Dist
 # Functions needed to compute the skew distance.
 
 
