@@ -45,6 +45,7 @@ distance_func_factories = {
     "manhattan" : manhattan_dist_factory, 
     "mahalanobis" : mahalanobis_dist_factory,
     "chebyshev" : chebyshev_dist_factory
+    "skew" : skew_distance_factory
     }
 
 
