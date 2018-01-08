@@ -87,7 +87,7 @@ def skew_Normal_Fit(x):
     a = np.dot(neg_Obs, neg_Obs)
     # Finding the sum of squares of our negative observations.
     b = np.dot(pos_Obs, pos_Obs)
-    # Finding the sum of squares of our negative observations.
+    # Finding the sum of squares of our positive observations.
     
     k = (b/a)**(1/6)
     # MLE for k.
