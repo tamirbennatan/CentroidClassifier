@@ -19,7 +19,7 @@ yields the classical classification method.
 """
 
 # Author: Tamir Bennatan <timibennatan@gmail.com>
-
+# Contributor (skew_distance_factory): Rocco Pascale <rpascale.student@manhattan.ed>
 
 import numpy as np
 import pandas as pd
@@ -33,7 +33,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 
 from utils.distance_factories import euclidean_dist_factory, manhattan_dist_factory,\
-    mahalanobis_dist_factory, chebyshev_dist_factory
+    mahalanobis_dist_factory, chebyshev_dist_factory, skew_distance_factory
 from utils.transform import class_subset, project_matrix
 from utils.plotting import make_meshgrid, plot_contours
 
