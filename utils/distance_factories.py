@@ -163,40 +163,49 @@ def skew_distance_factory(X):
     takes in a vector of shape (n_features,), and returns the 
     Skew distance to the centroid of `X`.
     """   
-    
-##### 1: Center Around Mean ###################################################
+
+
+    #############################
+    # Center data round mean
+    #############################
     
     C_i = X - class_average(X)
     # Centering the class around its mean.
     # Using the class_average function to do so.
-##### 1: Center Around Mean ###################################################
-    
-##### 2: PCA Basis Change #####################################################
+
+    #############################
+    # PCA change of base
+    #############################
     
     pca_Basis = PCA().fit(C_i).components_
     P_i = np.matmul(C_i, pca_Basis)
     # Performing the PCA Basis change.
     # Utilizing the PCA object from sklearn.
-##### 2: PCA Basis Change #####################################################
     
-##### 3: Center Around Mode ###################################################
-    
+    #############################
+    # Center data round mode
+    #############################
+
     feature_Modes = np.apply_along_axis(mode_Finder, 0, P_i)
     Q_i = P_i - feature_Modes
     # Finding the mode for each feature of Q_i and centering.
-##### 3: Center Around Mode ###################################################
     
-##### 4: Skew Distribution Fit and 1-sd Sigmas ################################
     
+    #############################
+    # Skew Distribution Fit and 1-sd Sigmas
+    #############################
+
+
     feature_Sigmas = np.apply_along_axis(sigma_Finder, 0, Q_i)
     # Fitting each feature of Q_i according to the its skew.
     # Then using that fit to find the one-sided Std. Deviations.
     # First array is the Positive Std. Dev.
     # Second Array is the Negative Std. Dev.
-##### 4: Skew Distribution Fit and 1-sd Sigmas ################################
     
-##### 5: Skew Distance ########################################################
-        
+
+	#############################
+    # Skew distance
+    #############################        
     def skew_distance(x):
         x_BC = pca_Basis.dot(x)
         # Changing x to the proper basis.
@@ -204,7 +213,6 @@ def skew_distance_factory(X):
         d = skew_Dist(x_BC, mode = feature_Modes, sigmas = feature_Sigmas)
         # Skew distance function on a particular observation.
         return(d)
-##### 5: Skew Distance ########################################################
     
     return(skew_distance)
 
