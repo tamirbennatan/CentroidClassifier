@@ -168,8 +168,9 @@ def skew_distance_factory(X):
     #############################
     # Center data round mean
     #############################
-    
-    C_i = X - class_average(X)
+	
+    avg_X = class_average(X)
+    C_i = X - avg_X
     # Centering the class around its mean.
     # Using the class_average function to do so.
 
@@ -207,9 +208,13 @@ def skew_distance_factory(X):
     # Skew distance
     #############################        
     def skew_distance(x):
-        x_BC = pca_Basis.dot(x)
-        # Changing x to the proper basis.
-        
+	x_BC = x - avg_X
+	# Subtracting the class mean.
+        x_BC = pca_Basis.dot(x_BC)
+	# Changing x to the proper basis.
+        x_BC = x_BC - feature_Modes
+	# Subtracting the feature modes.
+	
         d = skew_Dist(x_BC, mode = feature_Modes, sigmas = feature_Sigmas)
         # Skew distance function on a particular observation.
         return(d)
